@@ -17,10 +17,15 @@ The dataset utilizes the **international 10-20 system** for electrode placement.
 
 ![alt text](https://github.com/HetuLii/Data-Science-project-Motor-Imagery-EEG-Signal-decoding/blob/4ff40eac878e5b4b105318adc9da8990800e4b14/cue-based%20BCI%20paradigm.png)
 *Figure 1: Timing scheme of the cue-based BCI paradigm*
-## Data Pre-Processing
+![alt text](https://github.com/HetuLii/Data-Science-project-Motor-Imagery-EEG-Signal-decoding/blob/main/Electrode%20montage.png)
+*Figure 2: Left: Electrode montage corresponding to the international 10-20 system. Right: Electrode montage of the three monopolar EOG channels*
+# Data Processing
+## Pre-Processing
 Before any processing, each subject gives a dataset with shape $(576, 22000)$. We can impose a butterworth filter ($0.1 Hz$ to $39 Hz$) to reduce noise and irrelevant information. To avoid vanishing/exploding gradient problems, we impose Min-Max Scaling. We then need to expand the dimension such that various models can be trained on the dataset. 
 We first reshape the model to the shape $(576, 22, 1000)$, where axis $1$ denotes the number of electrodes (channels), and the last axis denotes the number of samplings ($4 \cdot 250 = 1000$). This is already sufficient for models such as Long Short-Term Memory (LSTM) and 1D-CNN model. For models involving $2D-CNN$, we need to upscale the dataset again. Here we can either upscale it to shape $(576, 1, 22, 1000)$ or to $(576, 22, 20, 50)$. We will design different models and compare the performances. 
-## Model Performance
+## Corss-subject dataset
+To check the cross-subject performances of the models, we need to choose one subject and take its dataset as the testing dataset, which will include $576$ data points. The rest nine subjects contribute to the training dataset, which includes $4608$ data points. Then, we split them into batches with size $32$, which is for parallelism during optimization. 
+# Model Performance
 
 
 
