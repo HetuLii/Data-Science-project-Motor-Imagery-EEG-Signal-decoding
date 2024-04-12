@@ -1,9 +1,9 @@
 # Introduction
 This repository contains a replication study of several state-of-the-art models in literatures focusing on motor imagery EEG signals. Further, experiments on some unaddressed questions are carried out and recorded. This project aims to:
 * Provide pre-processed, augmented, and ready-to-use motor imagery EEG dataset **BCIC-IV-2A**
-* Compare the cross-subject performances of models including fundamental **CNN**, **LSTM** models, hybrid models, **EEGNet-8,2** model, **EEG-TCNet** model, and **EEGNeX** model
+* Compare the cross-subject performances of models including fundamental **CNN**, **LSTM** models, hybrid models, **EEGNet-8,2** model, **EEG-TCNet** model, and **EEGNeX** model in pytorch
 * Enable other researchers to conveniently carry out cross-subject comparisons on their datasets
-* Investigate the efficacy of incorporating **Attention layer** in the EEGNet-8,2 model
+* Investigate the cross-subject efficacy of incorporating **Attention layer** in the EEGNet-8,2 model 
 # Dataset: BCIB-IV-2A
 ## Dataset Description
 The **BCIC-IV-2A** dataset is recorded from $9$ subjects. The cue-based BCI paradigm consisted the imagination of movement of the left hand (class 1), right hand (class 2), both feet (class 3), and tongue (class 4). Two sessions on different days were recorded for each subject. Each session is comprised of 6 runs separated by short breaks. 
@@ -16,5 +16,11 @@ The data are collected at a rate of $250 Hz$. The CSV file represents $4$ second
 The dataset utilizes the **international 10-20 system** for electrode placement. There are $25$ channels in total, of which three channels are for Electrooculography (EOG) data. For classifying MI (Motor Imagery) signals, it is necessary to filter the channels during preprocessing, retaining $22$ channels.
 
 ![alt text](https://github.com/HetuLii/Data-Science-project-Motor-Imagery-EEG-Signal-decoding/blob/4ff40eac878e5b4b105318adc9da8990800e4b14/cue-based%20BCI%20paradigm.png)
-*Figure 1: cue-based BCI paradigm*
+*Figure 1: Timing scheme of the cue-based BCI paradigm*
 ## Data Pre-Processing
+Before any processing, each subject gives a dataset with shape $(576, 22000)$. We can impose a butterworth filter ($0.1 Hz$ to $39 Hz$) to reduce noise and irrelevant information. To avoid vanishing/exploding gradient problems, we impose Min-Max Scaling. We then need to expand the dimension such that various models can be trained on the dataset. 
+We first reshape the model to the shape $(576, 22, 1000)$, where axis $1$ denotes the number of electrodes (channels), and the last axis denotes the number of samplings ($4 \cdot 250 = 1000$). This is already sufficient for models such as Long Short-Term Memory (LSTM) and 1D-CNN model. For models involving $2D-CNN$, we need to upscale the dataset again. Here we can either upscale it to shape $(576, 1, 22, 1000)$ or to $(576, 22, 20, 50)$. We will design different models and compare the performances. 
+## Model Performance
+
+
+
